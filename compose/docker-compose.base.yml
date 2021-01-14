@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+
+  nginx:
+    build:
+      context: ./images/nginx
+      dockerfile: Dockerfile
+    image: nginx:genworker-alpine
+
+  php-fpm:
+    build:
+      context: ./images/php
+      dockerfile: Dockerfile
+    image: php:genworker-alpine

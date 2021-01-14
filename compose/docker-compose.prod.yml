@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+
+  nginx:
+    build:
+      context: ./images
+      dockerfile: nginx.dockerfile
+    image: nginx:genworker-alpine-app
+    volumes:
+      - ${GW_CERTS}:/etc/nginx/ssl:ro
+      - ${GW_FILES}:/var/www/html/genworker/app/files:rw
+
+  php:
+    build:
+      context: ./images
+      dockerfile: php.dockerfile
+    image: php:genworker-alpine-app
+    volumes:
+      - ${GW_FILES}:/var/www/html/genworker/app/files:rw

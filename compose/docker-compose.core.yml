@@ -1,0 +1,45 @@
+version: '3'
+
+services:
+
+  nginx:
+    env_file: .env
+    environment:
+      ACCESS: ${ACCESS}
+      GENWORKER_ADDRESS: ${GENWORKER_ADDRESS}
+    command: /bin/sh -c "envsubst '$${GENWORKER_ADDRESS},$${ACCESS}' < /etc/nginx/xtra/genworker.dist > /etc/nginx/conf.d/genworker.conf && cp -f /etc/nginx/xtra/nginx.conf /etc/nginx/nginx.conf && nginx-debug -g 'daemon off;'"
+    ports:
+      - "${GW_EXTERNAL_IP}:${GW_EXTERNAL_HTTP_PORT}:80"
+      - "${GW_EXTERNAL_IP}:${GW_EXTERNAL_HTTPS_PORT}:443"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+    networks:
+      app:
+        ipv4_address: 10.70.0.2
+    restart: always
+
+  php:
+    env_file: .env
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+    networks:
+      app:
+        ipv4_address: 10.70.0.3
+        aliases:
+          - php-fpm
+    restart: always
+
+networks:
+  app:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+      -
+        subnet: 10.70.0.0/24

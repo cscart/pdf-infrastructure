@@ -1,0 +1,166 @@
+server {
+    server_name ${GENWORKER_ADDRESS};
+    listen      80;
+
+    if ($block_ua) {
+        return 444;
+    }
+
+    ############################################################################
+
+    satisfy any;
+    allow 10.70.0.0/24;
+    allow 95.104.194.197/32;
+    allow 94.130.29.145/32;
+    allow 184.95.47.24/29;
+    allow 127.0.0.1;
+    ${ACCESS} all;
+    auth_basic "Private Property";
+    auth_basic_user_file /etc/nginx/xtra/.htpasswd;
+
+    ############################################################################
+
+    error_log   /var/log/nginx/error.log;
+    access_log  /var/log/nginx/access.log extended;
+
+    ############################################################################
+
+    expires epoch;
+
+    include xtra/params.conf;
+    include xtra/gzip.conf;
+
+    set $root "/var/www/html/genworker";
+    root $root;
+    index index.php index.html index.htm;
+
+    ############################################################################
+
+    error_page 598 = @backend;
+
+    ############################################################################
+
+    location @fallback {
+        rewrite ^(.*)$ /index.php?$args;
+    }
+
+    location @backend {
+        fastcgi_next_upstream    error timeout invalid_header http_500 http_503 http_404;
+        try_files $uri $uri/ @fallback;
+        fastcgi_pass www;
+        fastcgi_index index.php;
+        fastcgi_read_timeout 120;
+        fastcgi_send_timeout 120s;
+        fastcgi_buffer_size   4k;
+        fastcgi_buffers       8 4k;
+        include xtra/fastcgi_params.conf;
+        include xtra/proxy.conf;
+    }
+
+    location = /ping {
+        fastcgi_pass www;
+        include      xtra/fastcgi_params.conf;
+    }
+
+    location / {
+        try_files $uri $uri/ @fallback;
+
+        location ~* \.(jpeg|jpg|png|css|js|pdf|txt|tar|ico)$ {
+            access_log off;
+            expires 1M;
+            add_header Cache-Control private;
+        }
+
+        location ~* \.([pP][hH][pP].?)$ {
+            return 598;
+        }
+
+    }
+}
+
+server {
+    server_name ${GENWORKER_ADDRESS};
+    listen      443 ssl http2;
+
+    if ($block_ua) {
+        return 444;
+    }
+
+    ############################################################################
+
+    satisfy any;
+    allow 10.70.0.0/24;
+    allow 95.104.194.197/32;
+    allow 94.130.29.145/32;
+    allow 184.95.47.24/29;
+    allow 127.0.0.1;
+    ${ACCESS} all;
+    auth_basic "Private Property";
+    auth_basic_user_file /etc/nginx/xtra/.htpasswd;
+
+    ############################################################################
+
+    error_log   /var/log/nginx/error.log;
+    access_log  /var/log/nginx/access.log extended;
+
+    ############################################################################
+
+    ssl                     on;
+    ssl_certificate         /etc/nginx/ssl/${GENWORKER_ADDRESS}.crt;
+    ssl_certificate_key     /etc/nginx/ssl/${GENWORKER_ADDRESS}.key;
+    include                 xtra/ssl.conf;
+
+    ############################################################################
+
+    expires epoch;
+
+    include xtra/params.conf;
+    include xtra/gzip.conf;
+
+    set $root "/var/www/html/genworker";
+    root $root;
+    index index.php index.html index.htm;
+
+    ############################################################################
+
+    error_page 598 = @backend;
+
+    ############################################################################
+
+    location @fallback {
+        rewrite ^(.*)$ /index.php?$args;
+    }
+
+    location @backend {
+        fastcgi_next_upstream    error timeout invalid_header http_500 http_503 http_404;
+        try_files $uri $uri/ @fallback;
+        fastcgi_pass www;
+        fastcgi_index index.php;
+        fastcgi_read_timeout 120;
+        fastcgi_send_timeout 120s;
+        fastcgi_buffer_size   4k;
+        fastcgi_buffers       8 4k;
+        include xtra/fastcgi_params.conf;
+        include xtra/proxy.conf;
+    }
+
+    location = /ping {
+        fastcgi_pass www;
+        include      xtra/fastcgi_params.conf;
+    }
+
+    location / {
+        try_files $uri $uri/ @fallback;
+
+        location ~* \.(jpeg|jpg|png|css|js|pdf|txt|tar|ico)$ {
+            access_log off;
+            expires 1M;
+            add_header Cache-Control private;
+        }
+
+        location ~* \.([pP][hH][pP].?)$ {
+            return 598;
+        }
+
+    }
+}
