@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+
+  nginx:
+    image: nginx:genworker-alpine
+    volumes:
+      - ${GW_APP}:/var/www/html/genworker:rw
+
+  php:
+    image: php:genworker-alpine
+    volumes:
+      - ${GW_APP}:/var/www/html/genworker:rw   
