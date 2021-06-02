@@ -6,7 +6,7 @@ GW_REGISTRY=docker-compose -f compose/docker-compose.registry.yml --project-name
 #
 include ./compose/.env
 export
-.PHONY: gw_prod gw_local gw_base gw_prp gw_registry
+.PHONY: gw_prod gw_local gw_base gw_prp gw_registry gw_prp_registry
 
 gw_base:
 	@$(GW_BASE) build
@@ -14,17 +14,18 @@ gw_base:
 gw_prod:
 	@$(GW_PROD) up -d --build
 
-gw_registry:
-	@$(GW_REGISTRY) up -d --build
-
-gw_prp:
-#PREPARING
-	@docker exec -i $$($(GW_PROD) ps -q php) sh -c "cd $(GW_WWW)/app/ && curl -sS https://getcomposer.org/installer | php -- --version=1.7.0 && php composer.phar install"
-
-
 gw_local:
 	@$(GW_LOCAL) up -d
 
-gw_prp_local:
+gw_registry:
+	@$(GW_REGISTRY) up -d --build
+
 #PREPARING
+gw_prp:
+	@docker exec -i $$($(GW_PROD) ps -q php) sh -c "cd $(GW_WWW)/app/ && curl -sS https://getcomposer.org/installer | php -- --version=1.7.0 && php composer.phar install"
+
+gw_prp_local:
 	@docker exec -i $$($(GW_LOCAL) ps -q php) sh -c "cd $(GW_WWW)/app/ && curl -sS https://getcomposer.org/installer | php -- --version=1.7.0 && php composer.phar install && mkdir -m777 files"
+
+gw_prp_registry:
+	@docker exec -i $$($(GW_REGISTRY) ps -q php) sh -c "cd $(GW_WWW)/app/ && curl -sS https://getcomposer.org/installer | php -- --version=1.7.0 && php composer.phar install"
