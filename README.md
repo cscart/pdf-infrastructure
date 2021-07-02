@@ -1,32 +1,48 @@
-# genworker-service
-HTML to PDF service for converter.cart-services.com
+# PDF Converter Infrastructure
 
-Starting project from old image (registry login required):
+Service that converts HTML documents to PDF.
 
-In `compose` directory copy `.env.dist` to `.env`, set your values (REGISTRY required, must logged in registry account).
+# Running locally
 
-Copy project https://github.com/cscart/pdf to `image` directory.
+1. Clone the environment repository:
+    ```
+    $ git clone git@github.com:cscart/genworker-service.git pdf-converter
+    $ cd pdf-converter
+    ```
+1. Put your SSL certificates into the `ssl` directory. Certificate and key files should be named after the domain your service will be hosted at. E.g., if you host your PDF Converter at https://pdf.example.com, certificate must be named `pdf.example.com.crt` and key `pdf.example.com.key`.
+1. Clone source code of the [converter](https://github.com/cscart/pdf) itself into the `compose/images/pdf` directory:
+    ```
+    $ git clone git@github.com:cscart/pdf.git compose/images/pdf
+    ```
+1. In the `compose/images/pdf` directory:
+    1. Copy `local_conf.php.dist` to `local_conf.php`.
+    1. Set `$config['wk_bin']` to `'/usr/bin/wkhtmltopdf'` in the `local_conf.php` file.
+1. In the `compose` directory:
+    1. Copy `.env.dist` to `.env`.
+    1. Set the domain of your service in the `GENWORKER_ADDRESS` variable and its external IP in the `GW_EXTERNAL_IP` variable in the `.env` file.
+1. Run `make gw_base` in the root directory to build images.
+1. Run `make gw_prod` to start project containers.
+1. Run `make gw_prp` to install composer packages.
 
-In `pdf` directory copy `local_conf.php.dist` to `local_conf.php`.
+# Running with previously built image from Docker registry
 
-Change line `$config['wk_bin']`, set path to binary `'/usr/bin/wkhtmltopdf'`.
-
-Run `make gw_registry` for use old images from registry.
-
-Run `make gw_prp_registry` for install composer packages.
-
-Build new images (not all cases tested!!!):
-
-Copy project https://github.com/cscart/pdf to `image` directory.
-
-In `pdf` directory copy `local_conf.php.dist` to `local_conf.php`.
-
-Change line `$config['wk_bin']`, set path to binary `'/usr/bin/wkhtmltopdf'`.
-
-In `compose` directory copy `.env.dist` to `.env`, set your values.
-
-Run `make gw_base` in root directory for image building.
-
-Run `make gw_prod` for start project containers.
-
-Run `make gw_prp` for install composer packages.
+1. Clone the environment repository:
+    ```
+    $ git clone git@github.com:cscart/genworker-service.git pdf-converter
+    $ cd pdf-converter
+    ```
+1. Put your SSL certificates into the `ssl` directory. Certificate and key files should be named after the domain your service will be hosted at. E.g., if you host your PDF Converter at https://pdf.example.com, certificate must be named `pdf.example.com.crt` and key `pdf.example.com.key`.
+1. Clone source code of the [converter](https://github.com/cscart/pdf) itself into the `compose/images/pdf` directory:
+    ```
+    $ git clone git@github.com:cscart/pdf.git compose/images/pdf
+    ```
+1. In the `compose/images/pdf` directory:
+    1. Copy `local_conf.php.dist` to `local_conf.php`.
+    1. Set `$config['wk_bin']` to `'/usr/bin/wkhtmltopdf'` in the `local_conf.php` file.
+1. In the `compose` directory:
+    1. Copy `.env.dist` to `.env`.
+    1. Set the domain of your service in the `GENWORKER_ADDRESS` variable and its external IP in the `GW_EXTERNAL_IP` variable in the `.env` file.
+    1. Set the address of the Docker registry in the `REGISTRY` variable in the `.env` file.
+    User must be logged in in the Docker registry to interact with it.
+1. Run `make gw_registry` in the root directory to download built images from the Docker registry.
+1. Run `make gw_prp_registry` to install composer packages.
