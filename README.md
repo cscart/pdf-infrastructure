@@ -11,13 +11,13 @@ Service that converts HTML documents to PDF.
 
 1. Clone the environment repository:
     ```
-    $ git clone git@github.com:cscart/pdf-infrastructure.git pdf-infrastructure
+    $ git clone https://github.com/cscart/pdf-infrastructure.git pdf-infrastructure
     $ cd pdf-infrastructure
     ```
 1. Put your SSL certificates into the `ssl` directory. Certificate and key files should be named after the domain your service will be hosted at. E.g., if you host your PDF Converter at https://pdf.example.com, certificate must be named `pdf.example.com.crt` and key `pdf.example.com.key`.
 1. Clone source code of the [converter](https://github.com/cscart/pdf) itself into the `compose/images/pdf` directory:
     ```
-    $ git clone git@github.com:cscart/pdf.git compose/images/pdf
+    $ git clone https://github.com/cscart/pdf.git compose/images/pdf
     ```
 1. In the `compose/images/pdf` directory:
     1. Copy `local_conf.php.dist` to `local_conf.php`.
@@ -33,13 +33,13 @@ Service that converts HTML documents to PDF.
 
 1. Clone the environment repository:
     ```
-    $ git clone git@github.com:cscart/pdf-infrastructure.git pdf-infrastructure
+    $ git clone https://github.com/cscart/pdf-infrastructure.git pdf-infrastructure
     $ cd pdf-infrastructure
     ```
 1. Put your SSL certificates into the `ssl` directory. Certificate and key files should be named after the domain your service will be hosted at. E.g., if you host your PDF Converter at https://pdf.example.com, certificate must be named `pdf.example.com.crt` and key `pdf.example.com.key`.
 1. Clone source code of the [converter](https://github.com/cscart/pdf) itself into the `compose/images/pdf` directory:
     ```
-    $ git clone git@github.com:cscart/pdf.git compose/images/pdf
+    $ git clone https://github.com/cscart/pdf.git compose/images/pdf
     ```
 1. In the `compose/images/pdf` directory:
     1. Copy `local_conf.php.dist` to `local_conf.php`.
