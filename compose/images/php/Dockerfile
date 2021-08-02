@@ -8,16 +8,14 @@ ENV WKH_DEPS \
 		openssl \
 		glib \
 		dbus \
-		fontconfig \
 		xvfb \
-		msttcorefonts-installer \
 		font-noto
 
 ARG PHP_VERSION=7.1.10
 
 ARG PHP_URL="https://secure.php.net/get/php-${PHP_VERSION}.tar.xz/from/this/mirror"
 ARG PHP_ASC_URL=""
-ARG PHP_SHA256="" 
+ARG PHP_SHA256=""
 ARG PHP_MD5=""
 
 
@@ -121,7 +119,7 @@ DISPLAY=:0.0 wkhtmltopdf-origin $@ ' > /usr/bin/wkhtmltopdf \
 #Clean
 	&& apk del .build-deps \
 	&& rm -rf /tmp/pear ~/.pearrc
-#	
+#
 ENTRYPOINT ["docker-php-entrypoint"]
 #Preparing php-fpm
 RUN set -ex \
@@ -157,6 +155,11 @@ RUN set -ex \
 		echo '[www]'; \
 		echo 'listen = [::]:9000'; \
 	} | tee php-fpm.d/zz-docker.conf
+
+RUN apk --no-cache add msttcorefonts-installer fontconfig && \
+    update-ms-fonts && \
+    fc-cache -f
+
 COPY supervisord.conf /etc/supervisord.conf
 EXPOSE 9000
 CMD /usr/bin/supervisord -c /etc/supervisord.conf
