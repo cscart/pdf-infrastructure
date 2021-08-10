@@ -58,6 +58,8 @@ RUN set -xe; \
 COPY docker-php-* /usr/local/bin/
 COPY wkhtmltopdf /usr/bin/wkhtmltopdf-origin
 COPY wkhtmltox.so.0.12.5 /usr/lib/
+COPY garbage_cleaner.sh /usr/local/bin/
+
 #Building PHP
 RUN set -xe \
 	&& apk add --no-cache --virtual .build-deps \
