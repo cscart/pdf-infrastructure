@@ -36,7 +36,9 @@ ENV PHPIZE_DEPS \
 		pkgconf \
 		re2c
 #Install not patched wkhtmltopdf
-RUN apk add --update wkhtmltopdf
+#RUN echo http://dl-cdn.alpinelinux.org/alpine/v3.13/community/ >> /etc/apk/repositories
+RUN apk add --update wkhtmltopdf=0.12.6-r0 --repository=http://dl-cdn.alpinelinux.org/alpine/v3.13/community/
+#RUN apk add --update wkhtmltopdf
 #Installing base packages
 RUN apk add --no-cache --virtual .persistent-deps \
 		ca-certificates \
@@ -56,8 +58,8 @@ RUN set -xe; \
 	apk del .fetch-deps
 
 COPY docker-php-* /usr/local/bin/
-COPY wkhtmltopdf /usr/bin/wkhtmltopdf-origin
-COPY wkhtmltox.so.0.12.5 /usr/lib/
+#COPY wkhtmltopdf /usr/bin/wkhtmltopdf-origin
+#COPY wkhtmltox.so.0.12.5 /usr/lib/
 COPY garbage_cleaner.sh /usr/local/bin/
 
 #Building PHP
@@ -113,9 +115,9 @@ RUN set -xe \
 #Supervisord install
 	&& apk add --no-cache supervisor \
 #Prepare wkhtmltop
-	&& echo $'#!/usr/bin/env sh\n\
-DISPLAY=:0.0 wkhtmltopdf-origin $@ ' > /usr/bin/wkhtmltopdf \
-	&& chmod +x /usr/bin/wkhtmltopdf \
+#	&& echo $'#!/usr/bin/env sh\n\
+#DISPLAY=:0.0 wkhtmltopdf-origin $@ ' > /usr/bin/wkhtmltopdf \
+#	&& chmod +x /usr/bin/wkhtmltopdf \
 	&& dbus-uuidgen > /var/lib/dbus/machine-id \
 #
 #Clean
