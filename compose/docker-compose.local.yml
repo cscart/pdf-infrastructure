@@ -10,4 +10,4 @@ services:
   php:
     image: php:genworker-alpine
     volumes:
-      - ${GW_APP}:/var/www/html/genworker:rw   
+      - ${GW_APP}:/var/www/html/genworker:rw
