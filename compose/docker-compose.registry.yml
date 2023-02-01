@@ -22,7 +22,6 @@ services:
         ipv4_address: 10.70.0.2
     volumes:
       - ${GW_CERTS}:/etc/nginx/ssl:ro
-      - ${GW_FILES}:/var/www/html/genworker/app/files:rw
     restart: always
 
   php:
@@ -38,8 +37,6 @@ services:
         ipv4_address: 10.70.0.3
         aliases:
           - php-fpm
-    volumes:
-      - ${GW_FILES}:/var/www/html/genworker/app/files:rw
     restart: always
 
 networks:
