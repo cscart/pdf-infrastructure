@@ -35,6 +35,25 @@ services:
           - php-fpm
     restart: always
 
+  chrome:
+    env_file: .env
+    environment:
+      - PREBOOT_CHROME=true
+      - MAX_CONCURRENT_SESSIONS=${CHROME_MAX_CONCURRENT_SESSIONS}
+      - KEEP_ALIVE=true
+    image: browserless/chrome:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "10"
+    networks:
+      app:
+        ipv4_address: 10.70.0.4
+        aliases:
+          - chrome
+    restart: always
+
 networks:
   app:
     driver: bridge
