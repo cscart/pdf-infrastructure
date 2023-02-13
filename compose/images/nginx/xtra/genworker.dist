@@ -61,7 +61,11 @@ server {
         fastcgi_pass www;
         include      xtra/fastcgi_params.conf;
     }
-
+    
+    location ~ /\.git {
+        return 404;
+    }
+    
     location / {
         try_files $uri $uri/ @fallback;
 
