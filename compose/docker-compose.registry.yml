@@ -25,7 +25,7 @@ services:
     restart: always
 
   php:
-    image: ${REGISTRY:-}cscart_genworker/php:7.1.10-fpm-alpine3.6
+    image: ${REGISTRY:-}cscart_genworker/php:8.1-fpm-alpine3.17
     env_file: .env
     logging:
       driver: "json-file"
@@ -37,6 +37,13 @@ services:
         ipv4_address: 10.70.0.3
         aliases:
           - php-fpm
+    volumes:
+      - ${LOCAL_CFG}/local_conf.php:/var/www/html/genworker/local_conf.php:rw
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 2G
     restart: always
 
 networks:
